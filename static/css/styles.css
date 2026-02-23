@@ -1,44 +1,278 @@
 :root{
-  --accent:#7aa27a; /* sage */
-  --accent-2:#a3bd9a; /* lighter */
-  --muted:#6b6b6b;
-  --bg:#f6f4ef; /* warm off-white */
-  --card-bg:#ffffff;
+  --accent:#a0714f; /* warm golden brown */
+  --accent-2:#d4a574; /* light terracotta/gold */
+  --accent-3:#8b5a2b; /* dark chocolate brown */
+  --muted:#7a6d63;
+  --bg:#faf7f2; /* cream off-white */
+  --card-bg:#fffcf8; /* warm white */
+  --text-primary:#3d3a37;
 }
+
+*{
+  transition:color .15s ease, background-color .15s ease, border-color .15s ease;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
 body{
   background:var(--bg);
   font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-  color:#22323a;
+  color:var(--text-primary);
+  line-height:1.6;
 }
+
+h1, h2, h3, h4, h5, h6{
+  font-family:'Merriweather', serif;
+  font-weight:700;
+}
+
 .hero{
-  background:linear-gradient(120deg, rgba(122,162,122,0.06), rgba(163,189,154,0.03));
+  background:linear-gradient(120deg, rgba(160,113,79,0.08), rgba(212,165,116,0.05));
   border-radius:12px;
   padding:2.2rem;
 }
-.book-card{background:var(--card-bg); border-radius:12px; overflow:hidden; box-shadow:0 6px 20px rgba(34,50,58,0.06); transition:transform .18s ease, box-shadow .18s ease}
-.book-card:hover{transform:translateY(-6px); box-shadow:0 18px 40px rgba(34,50,58,0.12)}
-.book-thumb{height:100%; object-fit:cover}
-.book-title{font-family:'Merriweather', serif; font-size:1.02rem}
-.price{font-size:1.05rem; color:var(--accent)}
-.filter-btn{margin-left:6px}
-.btn-outline-secondary{border-radius:999px}
-.btn-primary{border-radius:8px; background:var(--accent); border-color:var(--accent)}
-.btn-primary:hover{background:color-mix(in srgb, var(--accent) 80%, black)}
 
-/* Brand */
-.navbar-brand{font-size:1.15rem}
-.brand-icon{font-size:1.6rem; color:var(--accent-2); margin-right:10px}
-.brand-text{font-family:'Merriweather', serif; font-weight:700; letter-spacing:0.2px}
-
-/* subtle decorative underline under hero */
-.hero::after{content:''; display:block; height:6px; width:64px; background:linear-gradient(90deg,var(--accent-2),var(--accent)); border-radius:4px; margin-top:16px}
-
-/* small screens */
-@media (max-width:576px){
-  .book-thumb{height:120px; width:100%; object-fit:cover}
-  .hero{padding:1.6rem}
-  #search-form{display:none}
-  .navbar-brand{font-size:1rem}
+.book-card{
+  background:var(--card-bg);
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 6px 20px rgba(61,58,55,0.08);
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  border:1px solid rgba(160,113,79,0.1);
 }
 
+.book-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 18px 40px rgba(61,58,55,0.14);
+  border-color:rgba(160,113,79,0.25);
+}
 
+.book-thumb{
+  height:100%;
+  object-fit:cover;
+  transition:transform .3s ease;
+}
+
+.book-card:hover .book-thumb{
+  transform:scale(1.05);
+}
+
+.book-title{
+  font-family:'Merriweather', serif;
+  font-size:1.02rem;
+  line-height:1.4;
+}
+
+.price{
+  font-size:1.25rem;
+  color:var(--accent);
+  font-weight:700;
+}
+
+.filter-btn{
+  margin-left:6px;
+}
+
+.btn-outline-secondary{
+  border-radius:999px;
+  border-color:var(--muted);
+  color:var(--muted);
+}
+
+.btn-outline-secondary:hover{
+  background-color:var(--muted);
+}
+
+.btn-primary{
+  border-radius:8px;
+  background:var(--accent);
+  border-color:var(--accent);
+}
+
+.btn-primary:hover{
+  background:color-mix(in srgb, var(--accent) 80%, black);
+  border-color:color-mix(in srgb, var(--accent) 80%, black);
+}
+
+.btn-success{
+  background-color:#10b981;
+  border-color:#10b981;
+}
+
+.btn-success:hover{
+  background-color:#059669;
+  border-color:#059669;
+}
+
+/* Navbar */
+.navbar{
+  background:linear-gradient(90deg, rgba(255,252,248,0.95), rgba(250,247,242,0.95));
+}
+
+.navbar-search{
+  border:1px solid var(--accent-2);
+  border-radius:20px;
+  padding:0.4rem 1rem;
+  font-size:0.9rem;
+}
+
+.navbar-search:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 0.2rem rgba(160,113,79,0.15);
+}
+
+.nav-link{
+  color:var(--text-primary) !important;
+  font-weight:500;
+  transition:color 0.2s ease;
+  position:relative;
+}
+
+.nav-link:hover{
+  color:var(--accent) !important;
+}
+
+.nav-link.dropdown-toggle::after{
+  border-color:var(--accent);
+}
+
+.dropdown-menu{
+  border:1px solid var(--accent-2);
+  box-shadow:0 8px 24px rgba(160,113,79,0.12);
+  border-radius:8px;
+}
+
+.dropdown-item{
+  color:var(--text-primary);
+  transition:background-color 0.2s ease;
+}
+
+.dropdown-item:hover,
+.dropdown-item.active{
+  background-color:rgba(160,113,79,0.08);
+  color:var(--accent);
+}
+
+/* Brand */
+.navbar-brand{
+  font-size:1.25rem;
+  font-weight:700;
+}
+
+.brand-icon{
+  font-size:1.8rem;
+  color:var(--accent);
+  margin-right:10px;
+}
+
+.brand-text{
+  font-family:'Merriweather', serif;
+  font-weight:700;
+  letter-spacing:0.2px;
+}
+
+/* Navbar */
+.navbar{
+  border-bottom:1px solid rgba(160,113,79,0.1);
+}
+
+.navbar-toggler{
+  border:none;
+}
+
+/* Hero decorative underline */
+.hero::after{
+  content:'';
+  display:block;
+  height:6px;
+  width:64px;
+  background:linear-gradient(90deg,var(--accent-2),var(--accent-3));
+  border-radius:4px;
+  margin-top:16px;
+}
+
+/* Footer */
+footer{
+  background:linear-gradient(135deg, #2a2a2a, #1f1f1f);
+  margin-top:auto;
+  border-top:2px solid rgba(160,113,79,0.2);
+}
+
+footer a{
+  transition:color .2s ease;
+}
+
+footer a:hover{
+  color:var(--accent-2) !important;
+}
+
+/* Breadcrumb */
+.breadcrumb{
+  background-color:transparent;
+  padding:0;
+}
+
+.breadcrumb-item.active{
+  color:var(--text-primary);
+}
+
+/* Badge */
+.badge{
+  padding:0.35rem 0.65rem;
+  font-size:0.8rem;
+  font-weight:600;
+}
+
+/*  Responsive */
+@media (max-width:576px){
+  body{
+    font-size:0.95rem;
+  }
+
+  h1{
+    font-size:1.75rem;
+  }
+
+  .book-thumb{
+    height:120px;
+    width:100%;
+    object-fit:cover;
+  }
+
+  .hero{
+    padding:1.6rem;
+  }
+
+  #search-form{
+    display:none;
+  }
+
+  .navbar-brand{
+    font-size:1rem;
+  }
+
+  .brand-icon{
+    font-size:1.4rem;
+    margin-right:8px;
+  }
+
+  .btn-lg{
+    padding:0.5rem 1rem;
+    font-size:0.95rem;
+  }
+
+  footer .row{
+    text-align:center;
+  }
+
+  footer .col-md-4{
+    border-bottom:1px solid rgba(255,255,255,0.1);
+    padding-bottom:1rem;
+    margin-bottom:1rem;
+  }
+
+  footer .col-md-4:last-child{
+    border-bottom:none;
+  }

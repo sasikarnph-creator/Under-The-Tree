@@ -11,9 +11,73 @@ PRODUCTS = [
     {"id": 4, "name": "The Forgotten Library", "category": "แฟนตาซี", "price": 16.75, "image": "static/images/product4.svg", "desc": "เรื่องราวแห่งห้องสมุดลี้ลับและการค้นพบ"},
     {"id": 5, "name": "Letters to Yesterday", "category": "โรแมนติก", "price": 9.99, "image": "static/images/product5.svg", "desc": "จดหมายจากอดีตที่เปลี่ยนชีวิตใครบางคน"},
     {"id": 6, "name": "The Night Detective", "category": "นิยายสืบสวน", "price": 13.25, "image": "static/images/product6.svg", "desc": "นักสืบผู้ไขคดีในยามค่ำคืนกับเงื่อนงำลึกลับ"},
+    {"id": 7, "name": "Eternal Spring", "category": "โรแมนติก", "price": 13.99, "image": "static/images/product7.svg", "desc": "เรื่องรักที่เกิดขึ้นในสวนสวรรค์ต่างโลก"},
+    {"id": 8, "name": "The Crystal Shadow", "category": "แฟนตาซี", "price": 15.50, "image": "static/images/product8.svg", "desc": "ศึกษาเพื่อค้นหาอำนาจลี้ลับของคริสตัลวิเศษ"},
+    {"id": 9, "name": "Mystery of the Old Tower", "category": "นิยายสืบสวน", "price": 10.99, "image": "static/images/product9.svg", "desc": "ป้อมเก่าแзакซ้อนความลึกลับที่ยังไม่มีใครรู้"},
+    {"id": 10, "name": "Beyond the Horizon", "category": "แฟนตาซี", "price": 17.25, "image": "static/images/product10.svg", "desc": "เสาร์ขสำรวจไปยังเทพภูมิที่ลึกลับ"},
+    {"id": 11, "name": "Autumn Whispers", "category": "โรแมนติก", "price": 11.50, "image": "static/images/product11.svg", "desc": "ความรักที่เบาบางเหมือนใบไม้ร่วงในฤดูใบไม้ร่วง"},
+    {"id": 12, "name": "The Invisible Thief", "category": "นิยายสืบสวน", "price": 12.75, "image": "static/images/product12.svg", "desc": "การไล่ตามโจรลี้ลับที่ไม่มีใครเห็นหน้า"},
+    {"id": 13, "name": "Dragon's Realm", "category": "แฟนตาซี", "price": 18.99, "image": "static/images/product13.svg", "desc": "มหากาพย์แห่งพระมังกรและอาณาจักรวิเศษ"},
+    {"id": 14, "name": "Second Chance", "category": "โรแมนติก", "price": 10.50, "image": "static/images/product14.svg", "desc": "โอกาสสองครั้งของความรักที่เก่าแก่"},
+    {"id": 15, "name": "The Coded Message", "category": "นิยายสืบสวน", "price": 14.99, "image": "static/images/product15.svg", "desc": "รหัสลับที่จะเปิดเผยความจริงของโลก"},
+    {"id": 16, "name": "Sacred Woods", "category": "แฟนตาซี", "price": 16.25, "image": "static/images/product16.svg", "desc": "ป่าศักดิ์สิทธิ์ที่บ้านของจิตวิญญาณ"},
+    {"id": 17, "name": "Love in Winter", "category": "โรแมนติก", "price": 12.50, "image": "static/images/product17.svg", "desc": "ความหนาวเย็นของฤดูหนาวแต่ใจอบอุ่น"},
+    {"id": 18, "name": "Lost in Time", "category": "นิยายสืบสวน", "price": 15.75, "image": "static/images/product18.svg", "desc": "หายลงในกระแสเวลา ค้นหาวิธีกลับบ้าน"},
 ]
 
 
+import sqlite3
+from flask import g
+
+DB_PATH = 'data.db'
+
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect(DB_PATH)
+        db.row_factory = sqlite3.Row
+    return db
+
+def init_db():
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS products (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            category TEXT,
+            price REAL NOT NULL,
+            image TEXT,
+            desc TEXT
+        )
+    ''')
+    conn.commit()
+
+    # If DB empty, seed from in-memory PRODUCTS
+    c.execute('SELECT COUNT(*) as cnt FROM products')
+    row = c.fetchone()
+    if row and row[0] == 0:
+        for p in PRODUCTS:
+            c.execute('INSERT INTO products (name, category, price, image, desc) VALUES (?,?,?,?,?)',
+                      (p.get('name'), p.get('category'), p.get('price'), p.get('image'), p.get('desc')))
+        conn.commit()
+    conn.close()
+
+def load_products_from_db():
+    db = sqlite3.connect(DB_PATH)
+    db.row_factory = sqlite3.Row
+    cur = db.cursor()
+    cur.execute('SELECT id, name, category, price, image, desc FROM products ORDER BY id')
+    rows = cur.fetchall()
+    db.close()
+    prods = []
+    for r in rows:
+        prods.append({'id': r['id'], 'name': r['name'], 'category': r['category'], 'price': r['price'], 'image': r['image'], 'desc': r['desc']})
+    return prods
+
+# initialize DB and load products to in-memory list used by routes
+init_db()
+PRODUCTS = load_products_from_db()
 def find_product(pid):
     return next((p for p in PRODUCTS if p["id"] == int(pid)), None)
 
@@ -49,6 +113,14 @@ def cart_details():
 @app.route('/')
 def index():
     return render_template('index.html', products=PRODUCTS, cart_count=cart_count())
+
+
+@app.route('/product/<int:pid>')
+def product_detail(pid):
+    p = find_product(pid)
+    if not p:
+        return "Product not found", 404
+    return render_template('product_detail.html', product=p, cart_count=cart_count())
 
 
 @app.route('/cart')
@@ -120,6 +192,81 @@ def api_remove():
     cart.pop(str(pid), None)
     session['cart'] = cart
     return jsonify({'qty': cart_count()})
+
+
+# --- Admin (simple) ---
+def require_admin(fn):
+    from functools import wraps
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        if not session.get('is_admin'):
+            return redirect(url_for('login', next=request.path))
+        return fn(*args, **kwargs)
+    return wrapper
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if username == 'admin' and password == '1234':
+            session['is_admin'] = True
+            next_url = request.args.get('next') or url_for('admin')
+            return redirect(next_url)
+        else:
+            return render_template('login.html', error='ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง')
+    return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    session.pop('is_admin', None)
+    return redirect(url_for('index'))
+
+
+@app.route('/admin')
+@require_admin
+def admin():
+    prods = load_products_from_db()
+    return render_template('admin.html', products=prods)
+
+
+@app.route('/admin/add', methods=['POST'])
+@require_admin
+def admin_add():
+    name = request.form.get('name')
+    price = request.form.get('price')
+    image = request.form.get('image')
+    category = request.form.get('category') or ''
+    desc = request.form.get('desc') or ''
+    try:
+        price_f = float(price)
+    except (TypeError, ValueError):
+        price_f = 0.0
+    db = get_db()
+    cur = db.cursor()
+    cur.execute('INSERT INTO products (name, category, price, image, desc) VALUES (?,?,?,?,?)',
+                (name, category, price_f, image, desc))
+    db.commit()
+    return redirect(url_for('admin'))
+
+
+@app.route('/admin/delete/<int:pid>', methods=['POST'])
+@require_admin
+def admin_delete(pid):
+    db = get_db()
+    cur = db.cursor()
+    cur.execute('DELETE FROM products WHERE id = ?', (pid,))
+    db.commit()
+    return redirect(url_for('admin'))
+
+
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
 
 
 if __name__ == '__main__':

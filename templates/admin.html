@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Admin Dashboard</h2>
+  <div>
+    <a class="btn btn-sm btn-secondary" href="/">หน้าแรก</a>
+    <a class="btn btn-sm btn-outline-danger" href="/logout">ออกจากระบบ</a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-7">
+    <h5>รายการสินค้า</h5>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>ชื่อ</th>
+          <th>หมวด</th>
+          <th>ราคา</th>
+          <th>รูป</th>
+          <th>จัดการ</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in products %}
+        <tr>
+          <td>{{ p.id }}</td>
+          <td>{{ p.name }}</td>
+          <td>{{ p.category }}</td>
+          <td>{{ '%.2f'|format(p.price) }}</td>
+          <td><a href="{{ p.image }}" target="_blank">ดูรูป</a></td>
+          <td>
+            <form method="post" action="/admin/delete/{{ p.id }}" onsubmit="return confirm('ลบสินค้ารายการนี้?');">
+              <button class="btn btn-sm btn-danger" type="submit">ลบ</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6">ยังไม่มีสินค้า</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-5">
+    <h5>เพิ่มสินค้าใหม่</h5>
+    <form method="post" action="/admin/add">
+      <div class="mb-2">
+        <label class="form-label">ชื่อ</label>
+        <input name="name" class="form-control form-control-sm" required>
+      </div>
+      <div class="mb-2">
+        <label class="form-label">หมวด</label>
+        <input name="category" class="form-control form-control-sm">
+      </div>
+      <div class="mb-2">
+        <label class="form-label">ราคา</label>
+        <input name="price" class="form-control form-control-sm" required>
+      </div>
+      <div class="mb-2">
+        <label class="form-label">ลิงก์รูป</label>
+        <input name="image" class="form-control form-control-sm">
+      </div>
+      <div class="mb-2">
+        <label class="form-label">คำอธิบาย</label>
+        <textarea name="desc" class="form-control form-control-sm" rows="3"></textarea>
+      </div>
+      <button class="btn btn-primary btn-sm" type="submit">บันทึก</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

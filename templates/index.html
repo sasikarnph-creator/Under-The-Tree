@@ -1,60 +1,66 @@
 {% extends 'layout.html' %}
 {% block content %}
-<section class="hero py-5 mb-4">
+<section class="hero py-6 mb-6">
   <div class="container">
-    <div class="row align-items-center">
+    <div class="row align-items-center g-5">
       <div class="col-md-7">
-        <h1 class="display-6 fw-bold">พบกับนิยายที่ใช่ ในทุกอารมณ์</h1>
-        <p class="lead text-muted">คัดสรรนิยายคุณภาพจากผู้แต่งหลากหลายแนว อ่านเพลิน เติมแรงบันดาลใจ</p>
-        <div class="mt-3 d-flex gap-2">
+        <h1 class="display-5 fw-bold mb-4">พบกับนิยายที่ใช่ ในทุกอารมณ์</h1>
+        <p class="lead text-muted mb-5">คัดสรรนิยายคุณภาพจากผู้แต่งหลากหลายแนว อ่านเพลิน เติมแรงบันดาลใจ ราคาย่อมเยา</p>
+        <div class="d-flex gap-3 flex-wrap">
           <button class="btn btn-primary btn-lg filter-btn" data-cat="all">ดูทั้งหมด</button>
           <button class="btn btn-outline-secondary btn-lg filter-btn" data-cat="แฟนตาซี">แฟนตาซี</button>
           <button class="btn btn-outline-secondary btn-lg filter-btn" data-cat="โรแมนติก">โรแมนติก</button>
+          <button class="btn btn-outline-secondary btn-lg filter-btn" data-cat="นิยายสืบสวน">นิยายสืบสวน</button>
         </div>
       </div>
       <div class="col-md-5 d-none d-md-block text-end">
-        <img src="/static/images/product4.svg" alt="books" style="max-width:260px; opacity:0.95">
+        <img src="/static/images/product4.svg" alt="books" style="max-width:300px; opacity:0.9; filter:drop-shadow(0 8px 16px rgba(160,113,79,0.15))">
       </div>
     </div>
   </div>
 </section>
 
-<div class="container">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="h5 mb-0">หนังสือแนะนำ</h2>
+<div class="container mb-6">
+  <div class="d-flex justify-content-between align-items-center mb-5">
     <div>
-      <button class="btn btn-sm btn-outline-secondary filter-btn" data-cat="all">ทั้งหมด</button>
-      <button class="btn btn-sm btn-outline-secondary filter-btn" data-cat="โรแมนติก">โรแมนติก</button>
-      <button class="btn btn-sm btn-outline-secondary filter-btn" data-cat="แฟนตาซี">แฟนตาซี</button>
-      <button class="btn btn-sm btn-outline-secondary filter-btn" data-cat="นิยายสืบสวน">นิยายสืบสวน</button>
+      <h2 class="h3 mb-2 fw-bold">📚 คลังหนังสือของเรา</h2>
+      <p class="text-muted">9 เล่มเด่นของเรา (มีทั้งหมด {{ products|length }} เล่ม)</p>
+    </div>
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-sm btn-outline-secondary filter-btn" data-cat="all">ทั้งหมด</button>
+      <button type="button" class="btn btn-sm btn-outline-secondary filter-btn" data-cat="โรแมนติก">โรแมนติก</button>
+      <button type="button" class="btn btn-sm btn-outline-secondary filter-btn" data-cat="แฟนตาซี">แฟนตาซี</button>
+      <button type="button" class="btn btn-sm btn-outline-secondary filter-btn" data-cat="นิยายสืบสวน">สืบสวน</button>
     </div>
   </div>
 
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" id="products">
-    {% for p in products %}
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-5" id="products">
+      {% for p in products[:9] %}
     <div class="col product-card" data-category="{{ p.category }}">
-      <div class="card h-100 book-card">
-        <div class="row g-0 h-100">
-          <div class="col-4">
-            <img src="/{{ p.image }}" class="img-fluid rounded-start book-thumb" alt="{{ p.name }}">
-          </div>
-          <div class="col-8">
-            <div class="card-body d-flex flex-column h-100">
-              <div>
-                <h6 class="card-title mb-1 book-title">{{ p.name }}</h6>
-                <div class="small text-muted">{{ p.category }}</div>
-              </div>
-              <p class="card-text text-muted small mt-2">{{ p.desc }}</p>
-                <div class="mt-auto d-flex justify-content-between align-items-center">
-                <div class="price text-primary fw-bold">${{ '%.2f'|format(p.price) }}</div>
-                <button class="btn btn-sm btn-success add-btn d-flex align-items-center" data-id="{{ p.id }}">
-                  <i class="bi bi-cart-plus me-1"></i> เพิ่มลงตะกร้า
-                </button>
+      <a href="/product/{{ p.id }}" class="text-decoration-none">
+        <div class="card h-100 book-card">
+          <div class="row g-0 h-100">
+            <div class="col-4 position-relative overflow-hidden">
+              <img src="/{{ p.image }}" class="img-fluid book-thumb" alt="{{ p.name }}">
+            </div>
+            <div class="col-8">
+              <div class="card-body d-flex flex-column h-100 p-3">
+                <div>
+                  <h6 class="card-title mb-2 book-title">{{ p.name }}</h6>
+                  <div class="small text-muted badge bg-light text-dark">{{ p.category }}</div>
+                </div>
+                <p class="card-text text-muted small mt-2">{{ p.desc }}</p>
+                <div class="mt-auto">
+                  <div class="price text-primary fw-bold fs-5">${{ '%.2f'|format(p.price) }}</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </a>
+      <button class="btn btn-sm btn-success w-100 mt-2 add-btn d-flex align-items-center justify-content-center" data-id="{{ p.id }}">
+        <i class="bi bi-cart-plus me-1"></i> เพิ่มลงตะกร้า
+      </button>
     </div>
     {% endfor %}
   </div>

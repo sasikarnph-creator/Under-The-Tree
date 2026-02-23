@@ -2,16 +2,20 @@ document.addEventListener('DOMContentLoaded', ()=>{
   updateCartCount()
 
   // Add-to-cart buttons
-  document.querySelectorAll('.add-btn').forEach(btn=>{
+  const bindAdd = (btn)=>{
     btn.addEventListener('click', async e=>{
       const id = btn.dataset.id
       const res = await fetch('/api/add', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({product_id:id})})
       if(res.ok){
         const j = await res.json()
-        document.getElementById('cart-count').textContent = j.qty
+        const el = document.getElementById('cart-count')
+        if(el) el.textContent = j.qty
       }
     })
-  })
+  }
+
+  document.querySelectorAll('.add-btn').forEach(bindAdd)
+  document.querySelectorAll('.add-to-cart-btn').forEach(bindAdd)
 
   // Filter
   document.querySelectorAll('.filter-btn').forEach(b=>{
@@ -24,9 +28,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
     })
   })
 
-  // Search (header search & hero)
-  const searchInput = document.getElementById('search-input')
-  if(searchInput){
+  // Search (header search & hero) - bind to any input with id search-input
+  document.querySelectorAll('#search-input').forEach(searchInput=>{
     searchInput.addEventListener('input', ()=>{
       const q = searchInput.value.trim().toLowerCase()
       document.querySelectorAll('.product-card').forEach(card=>{
@@ -36,7 +39,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
         else card.style.display = 'none'
       })
     })
-  }
+  })
 
   // Cart page: qty change & remove
   document.querySelectorAll('.qty-input').forEach(input=>{
@@ -63,7 +66,8 @@ async function updateCartCount(){
     const res = await fetch('/api/cart')
     if(res.ok){
       const j = await res.json()
-      document.getElementById('cart-count').textContent = j.qty
+      const el = document.getElementById('cart-count')
+      if(el) el.textContent = j.qty
     }
   }catch(e){console.warn(e)}
 }
