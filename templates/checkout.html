@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1 class="h4 mb-3">ชำระเงิน</h1>
+{% if items %}
+<form method="post" class="row g-3">
+  <div class="col-12">
+    <label class="form-label">ชื่อ-นามสกุล</label>
+    <input name="name" class="form-control" required>
+  </div>
+  <div class="col-12 col-md-6">
+    <label class="form-label">อีเมล</label>
+    <input name="email" type="email" class="form-control" required>
+  </div>
+  <div class="col-12 col-md-6">
+    <label class="form-label">วิธีการชำระเงิน</label>
+    <select name="payment" class="form-select">
+      <option>บัตรเครดิต</option>
+      <option>โอนผ่านธนาคาร</option>
+      <option>เก็บเงินปลายทาง</option>
+    </select>
+  </div>
+  <div class="col-12">
+    <label class="form-label">ที่อยู่</label>
+    <textarea name="address" class="form-control" rows="3"></textarea>
+  </div>
+  <div class="col-12 d-flex justify-content-between align-items-center">
+    <div>รวม: <strong>${{ '%.2f'|format(total) }}</strong></div>
+    <button class="btn btn-success" type="submit">ยืนยันการสั่งซื้อ</button>
+  </div>
+</form>
+{% else %}
+<p class="text-muted">ตะกร้าของคุณว่างเปล่า</p>
+<a href="/" class="btn btn-outline-primary">กลับไปเลือกซื้อ</a>
+{% endif %}
+
+{% endblock %}

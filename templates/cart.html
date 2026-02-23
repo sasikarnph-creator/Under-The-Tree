@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1 class="h4 mb-3">ตะกร้าสินค้า</h1>
+{% if items %}
+<div class="table-responsive">
+  <table class="table align-middle">
+    <thead>
+      <tr>
+        <th>สินค้า</th>
+        <th>จำนวน</th>
+        <th>ราคา</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for it in items %}
+      <tr>
+        <td class="d-flex align-items-center">
+          <img src="/{{ it.product.image }}" alt="" style="width:64px; height:64px; object-fit:cover;" class="me-3">
+          <div>
+            <div>{{ it.product.name }}</div>
+            <div class="text-muted small">{{ it.product.category }}</div>
+          </div>
+        </td>
+        <td>
+          <input type="number" class="form-control qty-input" data-id="{{ it.product.id }}" value="{{ it.qty }}" min="0" style="width:90px">
+        </td>
+        <td>${{ '%.2f'|format(it.subtotal) }}</td>
+        <td><button class="btn btn-sm btn-danger remove-btn" data-id="{{ it.product.id }}">ลบ</button></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="d-flex justify-content-end">
+  <div class="me-3">รวมทั้งหมด: <strong>${{ '%.2f'|format(total) }}</strong></div>
+  <a href="/checkout" class="btn btn-primary">ไปชำระเงิน</a>
+</div>
+{% else %}
+<p class="text-muted">ยังไม่มีสินค้าในตะกร้า</p>
+<a href="/" class="btn btn-outline-primary">กลับไปเลือกซื้อ</a>
+{% endif %}
+
+{% endblock %}

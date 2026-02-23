@@ -1,0 +1,44 @@
+:root{
+  --accent:#7aa27a; /* sage */
+  --accent-2:#a3bd9a; /* lighter */
+  --muted:#6b6b6b;
+  --bg:#f6f4ef; /* warm off-white */
+  --card-bg:#ffffff;
+}
+body{
+  background:var(--bg);
+  font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  color:#22323a;
+}
+.hero{
+  background:linear-gradient(120deg, rgba(122,162,122,0.06), rgba(163,189,154,0.03));
+  border-radius:12px;
+  padding:2.2rem;
+}
+.book-card{background:var(--card-bg); border-radius:12px; overflow:hidden; box-shadow:0 6px 20px rgba(34,50,58,0.06); transition:transform .18s ease, box-shadow .18s ease}
+.book-card:hover{transform:translateY(-6px); box-shadow:0 18px 40px rgba(34,50,58,0.12)}
+.book-thumb{height:100%; object-fit:cover}
+.book-title{font-family:'Merriweather', serif; font-size:1.02rem}
+.price{font-size:1.05rem; color:var(--accent)}
+.filter-btn{margin-left:6px}
+.btn-outline-secondary{border-radius:999px}
+.btn-primary{border-radius:8px; background:var(--accent); border-color:var(--accent)}
+.btn-primary:hover{background:color-mix(in srgb, var(--accent) 80%, black)}
+
+/* Brand */
+.navbar-brand{font-size:1.15rem}
+.brand-icon{font-size:1.6rem; color:var(--accent-2); margin-right:10px}
+.brand-text{font-family:'Merriweather', serif; font-weight:700; letter-spacing:0.2px}
+
+/* subtle decorative underline under hero */
+.hero::after{content:''; display:block; height:6px; width:64px; background:linear-gradient(90deg,var(--accent-2),var(--accent)); border-radius:4px; margin-top:16px}
+
+/* small screens */
+@media (max-width:576px){
+  .book-thumb{height:120px; width:100%; object-fit:cover}
+  .hero{padding:1.6rem}
+  #search-form{display:none}
+  .navbar-brand{font-size:1rem}
+}
+
+
